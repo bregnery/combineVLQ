@@ -57,13 +57,20 @@ vlqSysts.AddSystematics_vlq_had(cb)
 
 print '>> Extracting histograms from input root files...'
 for chn in chns:
-    file = aux_shapes + chn + "/HT_histograms_" + chn + ".root" 
+    for region in regions:
+#    file = aux_shapes + chn + "/HT_histograms_" + chn + ".root" 
 #    cb.cp().channel([chn]).era().backgrounds().ExtractShapes(
 #        file, '$BIN/$PROCESS', '$BIN/$PROCESS_$SYSTEMATIC')
-    cb.cp().channel([chn]).era().backgrounds().ExtractShapes(
-        file, '$BIN/$PROCESS', '$BIN/$PROCESS_$SYSTEMATIC')
-    cb.cp().channel([chn]).era().signals().ExtractShapes(
-        file, '$BIN/$PROCESS$MASS', '$BIN/$PROCESS$MASS_$SYSTEMATIC')
+        for bkg in bkg_procs :
+            if bkg == "DataDriven-Multijet": bkg_str = "DD-Multijet"
+            else: bkg_str = bkg
+            cb.cp().channel([chn]).era(['']).backgrounds().ExtractShapes(
+                aux_shapes + chn + "/HT_histograms_" + bkg_str + ".root",
+                region + "_HT", region + '_HT' + '_$SYSTEMATIC')
+        for sig in sig_procs :
+            cb.cp().channel([chn]).era(['']).signals().ExtractShapes(
+                aux_shapes + chn + "/HT_histograms_" + sig + "_M-" + '$MASS' + ".root", 
+                region + '_HT', region + '_HT' + '_$SYSTEMATIC')
 
 print '>> Merging bin errors and generating bbb uncertainties...'
 bbb = ch.BinByBinFactory()

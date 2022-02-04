@@ -26,6 +26,22 @@ git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
 scram b
 ```
 
+The CombineHarvester needs to be altered slightly in order to work with the systematic names used in our analysis.
+This is done by altering the file `/CombineHarvester/CombineTools/src/CombineHarvester.cc` at lines 541 and 542. 
+These lines look like this:
+
+```
+boost::replace_all(p_s_hi, "$SYSTEMATIC", entry->name() + "Up");  
+boost::replace_all(p_s_lo, "$SYSTEMATIC", entry->name() + "Down"); 
+```
+
+and need to be altered to include an underscore:
+
+```
+boost::replace_all(p_s_hi, "$SYSTEMATIC", entry->name() + "_Up");  
+boost::replace_all(p_s_lo, "$SYSTEMATIC", entry->name() + "_Down"); 
+```
+
 
 
 
