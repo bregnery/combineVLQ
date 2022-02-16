@@ -24,11 +24,13 @@ fileDict = {}
 i = 0
 for file in files:
     # Store root file, with process as the key
+    if not ".root" in file: continue
     beginIndex = len("HT_histograms_")
     endIndex = file.find(".root")
     fileDict[file[beginIndex:endIndex]] = dirPath + file 
     i += 1
-    if i > 4: break
+    print(file)
+    #if i > 4: break
 
 # Make a new set of files divided by the signal regions
 regions = open('Region_Names.txt').read().splitlines() 
