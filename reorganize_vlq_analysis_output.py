@@ -29,7 +29,6 @@ for file in files:
     endIndex = file.find(".root")
     fileDict[file[beginIndex:endIndex]] = dirPath + file 
     i += 1
-    print(file)
     #if i > 4: break
 
 # Make a new set of files divided by the signal regions
@@ -38,6 +37,7 @@ newDirPath = dirPath + "reorganized/"
 newFilesDict = {}
 for region in regions:
     newFilesDict[region+".root"] = root.TFile(newDirPath + region + ".root", "RECREATE") 
+    newFilesDict[region+".root"].mkdir(region)
 
 # Access the histograms in each file
 for process, tfileName in fileDict.items():
@@ -57,7 +57,8 @@ for process, tfileName in fileDict.items():
 
             # Get the observed in HT in each signal region
             if len(ikey.GetName()) == 13:
-                hist.SetName(histRegion + "/" + process )
+                #hist.SetName(histRegion + "/" + process )
+                hist.SetName(process )
 
             # Get the systematics in each signal region
             else: 
@@ -70,8 +71,11 @@ for process, tfileName in fileDict.items():
                 else:
                     print("There's a fucking problem Brendan " + str(ikey.GetName() ) + " God, you forgot this, jez" )
                 systematic =  str(ikey.GetName() )[14:endIndex-1]
-                hist.SetName(histRegion + "/" + process + "_" + systematic + suffix)
-            newFilesDict[histRegion+".root"].WriteObject(hist, hist.GetName() )
+                #hist.SetName(histRegion + "/" + process + "_" + systematic + suffix)
+                hist.SetName(process + "_" + systematic + suffix)
+            #newFilesDict[histRegion+".root"].cd(histRegion)
+            #newFilesDict[histRegion+".root"].WriteObject(hist, histRegion + hist.GetName() )
+            newFilesDict[histRegion+".root"].GetDirectory(histRegion).WriteObject(hist, histRegion + hist.GetName() )
                 
         j+=1
         #if j > 4: break
