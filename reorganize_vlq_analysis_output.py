@@ -2,7 +2,7 @@
 #=========================================================================================
 # make_VLQ_combine_cards.py --------------------------------------------------------------
 #-----------------------------------------------------------------------------------------
-# Author(s): Brendan Regnery -------------------------------------------------------------
+# Author(s): Brendan Regnery, Sam Abbott -------------------------------------------------
 #-----------------------------------------------------------------------------------------
 # This reorganizes the systematic shapes from various root files for proper use with the -
 #   the combine harvester ----------------------------------------------------------------
@@ -13,7 +13,8 @@ import ROOT as root
 import os
 
 # User input variables
-dirPath = "/afs/cern.ch/work/b/bregnery/public/VLQ/combineVLQ/CMSSW_10_2_13/src/combineVLQ/auxiliaries/shapes/TPrimeTPrime_2017/"
+dirPath = "/afs/cern.ch/work/b/bregnery/public/VLQ/combineVLQ/CMSSW_10_2_13/src/combineVLQ/auxiliaries/oldshapes/TPrimeTPrime_2017/"
+newDirPath = "/afs/cern.ch/work/b/bregnery/public/VLQ/combineVLQ/CMSSW_10_2_13/src/combineVLQ/auxiliaries/shapes/TPrimeTPrime_2017/"
 
 # The files  
 print("Get all the root files for the signal samples")
@@ -33,7 +34,6 @@ for file in files:
 
 # Make a new set of files divided by the signal regions
 regions = open('Region_Names.txt').read().splitlines() 
-newDirPath = dirPath + "reorganized/"
 newFilesDict = {}
 for region in regions:
     newFilesDict[region+".root"] = root.TFile(newDirPath + region + ".root", "RECREATE") 
@@ -71,7 +71,7 @@ for process, tfileName in fileDict.items():
                     print("There's a fucking problem Brendan " + str(ikey.GetName() ) + " God, you forgot this, jez" )
                 systematic =  str(ikey.GetName() )[14:endIndex-1]
                 hist.SetName(process + "_" + systematic + suffix)
-            newFilesDict[histRegion+".root"].GetDirectory(histRegion).WriteObject(hist, histRegion + hist.GetName() )
+            newFilesDict[histRegion+".root"].GetDirectory(histRegion).WriteObject(hist, hist.GetName() )
                 
         j+=1
         #if j > 4: break
