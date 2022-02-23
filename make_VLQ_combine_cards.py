@@ -20,7 +20,6 @@ import ROOT as root
 cb = ch.CombineHarvester()
 #cb.SetVerbosity(2)
 auxiliaries  = os.environ['CMSSW_BASE'] + '/src/combineVLQ/auxiliaries/'
-#aux_shapes   = auxiliaries +'shapes_intermediate/'
 aux_shapes   = auxiliaries +'shapes/'
 
 # List the Analysis channels
@@ -34,49 +33,8 @@ else :
     sig_procs = ['TPrimeTPrime']
 
 # dictionary for the backgrounds
-#bkg_procs = ['DataDriven-Multijet', 'WJets', 'ZJets', 'ttWJets', 'ttWW', 'ttWZ', 'ttZJets', 'ttZZ', 'ttbar']
 bkg_procs = ['DD-Multijet', 'WJets', 'ZJets', 'ttWJets', 'ttWW', 'ttWZ', 'ttZJets', 'ttZZ', 'ttbar']
-#possible_bkg_procs = ['DD-Multijet', 'WJets', 'ZJets', 'ttWJets', 'ttWW', 'ttWZ', 'ttZJets', 'ttZZ', 'ttbar']
 
-'''
-# Now we need to look at each signal region and the processes that it contains
-# Path to the histograms 
-#dirPath = "/afs/cern.ch/work/b/bregnery/public/VLQ/combineVLQ/CMSSW_10_2_13/src/combineVLQ/auxiliaries/shapes_intermediate/TPrimeTPrime_2017/"
-dirPath = "/afs/cern.ch/work/b/bregnery/public/VLQ/combineVLQ/CMSSW_10_2_13/src/combineVLQ/auxiliaries/shapes/TPrimeTPrime_2017/"
-files = os.listdir(dirPath)
-
-# Create a dictionary with space for all of the files
-fileDict = {}
-i = 0
-for file in files:
-    # Store root file, with region as the key
-    if not ".root" in file: continue
-    endIndex = file.find(".root")
-    fileDict[file[:endIndex]] = dirPath + file 
-    i += 1
-
-# Find the backgrounds for each signal region
-regions_bkgs_dict = {}
-for region, tfileName in fileDict.items():
-    regions_bkgs_dict[region] = []
-    tfile = root.TFile.Open(tfileName)
-    tkeys = root.TIter(tfile.GetDirectory(region).GetListOfKeys() )
-    #print("file name: " + region)
-    for ikey in tkeys:
-        if str(ikey.GetName() ) == "WJets_TopMistagSFUp":
-            print("region: "+ region + " name: " + str(ikey.GetName() ) )
-
-        for bkg in possible_bkg_procs :
-            # see if the bkg is present
-            if bkg == str(ikey.GetName()) : 
-                regions_bkgs_dict[region].append(bkg)
-                #print("bkg: " + bkg + str(ikey.GetName() ) )
-    # put background process in the dictionary
-    tfile.Close()
-    #quit()
-
-#print(regions_bkgs_dict)
-'''
 
 regions = open('Region_Names.txt').read().splitlines() 
 
@@ -106,40 +64,6 @@ for chn in chns:
         file, '$BIN/$PROCESS', '$BIN/$PROCESS_$SYSTEMATIC')
     cb.cp().channel([chn]).era(['']).signals().ExtractShapes(
         file, '$BIN/$PROCESS$MASS', '$BIN/$PROCESS$MASS_$SYSTEMATIC')
-'''
-
-for chn in chns:
-    for region in regions:
-        #file = aux_shapes + chn + "/" + region + ".root" 
-        file = aux_shapes + chn + "/2017_proc_obs_systematics.root" 
-        cb.cp().channel([chn]).era(['']).backgrounds().ExtractShapes(
-            file, region + '/$PROCESS', region + '/$PROCESS_$SYSTEMATIC')
-        cb.cp().channel([chn]).era(['']).signals().ExtractShapes(
-            file, region + '/$PROCESS$MASS', region + '/$PROCESS$MASS_$SYSTEMATIC')
-for chn in chns:
-    for region in regions:
-        file = aux_shapes + chn + "/" + region + ".root" 
-
-        cb.cp().channel([chn]).era().backgrounds().ExtractShapes(
-            file, region + '/' + '$PROCESS', region + '/' + '$PROCESS_$SYSTEMATIC')
-        cb.cp().channel([chn]).era().signals().ExtractShapes(
-            file, region + '/' + '$PROCESS$MASS', region + '/' + '$PROCESS$MASS_$SYSTEMATIC')
-
-        cb.cp().channel([chn]).era().backgrounds().ExtractShapes(
-            file, '$BIN/$PROCESS', '$BIN/$PROCESS_$SYSTEMATIC')
-        cb.cp().channel([chn]).era().signals().ExtractShapes(
-            file, '$BIN/$PROCESS$MASS', '$BIN/$PROCESS$MASS_$SYSTEMATIC')
-'''
-         #for bkg in bkg_procs :
-         #   if bkg == "DataDriven-Multijet": bkg_str = "DD-Multijet"
-         #   else: bkg_str = bkg
-#        cb.cp().channel([chn]).era(['']).backgrounds().ExtractShapes(
-#            aux_shapes + chn + "/HT_histograms_$PROCESS.root",
-#            region + "_HT", region + '_HT' + '_$SYSTEMATIC')
-#        for sig in sig_procs :
-#            cb.cp().channel([chn]).era(['']).signals().ExtractShapes(
-#                aux_shapes + chn + "/HT_histograms_" + sig + "_M-" + '$MASS' + ".root", 
-#                region + '_HT', region + '_HT' + '_$SYSTEMATIC')
 
 print '>> Merging bin errors and generating bbb uncertainties...'
 bbb = ch.BinByBinFactory()

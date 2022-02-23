@@ -80,8 +80,5 @@ for process, tfileName in fileDict.items():
 
 # Close everything
 newFile.Close()
-#for region in regions:
-#    newFilesDict[region+".root"].Close()
-# print(fileDict)
 
 
