@@ -78,11 +78,13 @@ cb_tt = cb.cp().channel(['tt'])
 bbb.MergeAndAdd(cb_tt.cp().era(['8TeV']).bin_id([0, 1, 2]).process(['QCD','W','ZLL','VV','ZTT','TT']), cb)
 '''
 
-print '>> Setting standardised bin names...'
-ch.SetStandardBinNames(cb)
+#print '>> Setting standardised bin names...'
+#ch.SetStandardBinNames(cb)
 
-writer = ch.CardWriter('LIMITS/$TAG/$MASS/$CHANNEL_$BINID.txt',
+writer = ch.CardWriter('LIMITS/$TAG/$MASS/$BIN.txt',
                        'LIMITS/$TAG/common/$CHANNEL.input.root')
+#writer = ch.CardWriter('LIMITS/$TAG/$MASS/$CHANNEL_$BINID.txt',
+#                       'LIMITS/$TAG/common/$CHANNEL.input.root')
 #writer.SetVerbosity(1)
 writer.WriteCards('cmb', cb)
 for chn in chns: writer.WriteCards(chn,cb.cp().channel([chn]))
