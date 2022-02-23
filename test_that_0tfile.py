@@ -13,33 +13,25 @@ import ROOT as root
 import os
 
 # User input variables
-dirPath = "/afs/cern.ch/work/b/bregnery/public/VLQ/combineVLQ/CMSSW_10_2_13/src/combineVLQ/auxiliaries/oldshapes/TPrimeTPrime_2017/"
-newDirPath = "/afs/cern.ch/work/b/bregnery/public/VLQ/combineVLQ/CMSSW_10_2_13/src/combineVLQ/auxiliaries/shapes/TPrimeTPrime_2017/"
-newFileName = "2017_proc_obs_systematics.root"
-
-# The files  
-print("Get all the root files for the signal samples")
-files = os.listdir(dirPath)
+boomfile = "0t0W0Z0H0b.root"
 
 # Create a dictionary with space for all of the files
-fileDict = {}
-i = 0
-for file in files:
-    # Store root file, with process as the key
-    if not ".root" in file: continue
-    beginIndex = len("HT_histograms_")
-    endIndex = file.find(".root")
-    fileDict[file[beginIndex:endIndex]] = dirPath + file 
-    i += 1
-    #if i > 4: break
+tfile = root.TFile.Open(boomfile)
+hist = tfile.Get("0t0W0Z0H0b/data_obs")
+#tfile.cd("0t0W0Z0H0b")
+print (hist.GetName() )
 
+
+'''
 # Make a new set of files divided by the signal regions
 regions = open('Region_Names.txt').read().splitlines() 
-newFile = root.TFile(newDirPath + newFileName, "RECREATE") 
+newFilesDict = {}
 for region in regions:
-    newFile.mkdir(region)
+    newFilesDict[region+".root"] = root.TFile(newDirPath + region + ".root", "RECREATE") 
+    newFilesDict[region+".root"].mkdir(region)
 
 # Access the histograms in each file
+nObjs = 0
 for process, tfileName in fileDict.items():
     j = 0
     print(process)
@@ -71,17 +63,22 @@ for process, tfileName in fileDict.items():
                     print("There's a fucking problem Brendan " + str(ikey.GetName() ) + " God, you forgot this, jez" )
                 systematic =  str(ikey.GetName() )[14:endIndex-1]
                 hist.SetName(process + "_" + systematic + suffix)
-            newFile.GetDirectory(histRegion).WriteObject(hist, hist.GetName() )
+            newFilesDict[histRegion+".root"].GetDirectory(histRegion).WriteObject(hist, hist.GetName() )
                 
         j+=1
+        nObjs+=1
+        # Have to open and close the files to deal with memory issues
+        if nObjs % 6000 == 0:
+            for region in regions:
+                newFilesDict[region+".root"].Close()
+                newFilesDict[region+".root"] = root.TFile.Open(newDirPath + region + ".root", "UPDATE") 
         #if j > 4: break
     del tkeys
     tfile.Close()
 
 # Close everything
-newFile.Close()
-#for region in regions:
-#    newFilesDict[region+".root"].Close()
+for region in regions:
+    newFilesDict[region+".root"].Close()
 # print(fileDict)
 
-
+'''

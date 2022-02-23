@@ -46,7 +46,7 @@ def AddSystematics_vlq_had(cb):
       cb, "topTagSF", "shape", ch.SystMap()(1.00))
 
   src.cp().process(signal+['WJets','ZJets']).AddSyst(
-      cb, "TopMistagSF", "shape", ch.SystMap()(1.00))
+      cb, "topMistagSF", "shape", ch.SystMap()(1.00))
  
   src.cp().process(signal+['WJets','ZJets']).AddSyst(
       cb, "WTagSF", "shape", ch.SystMap()(1.00))
@@ -73,22 +73,22 @@ def AddSystematics_vlq_had(cb):
       cb, "QCDMistagSF", "shape", ch.SystMap()(1.00))
 
   # Background Estimate Uncertainties
-  src.cp().process(['DataDriven-Multijet']).AddSyst(
+  src.cp().process(['DD-Multijet']).AddSyst(
       cb, "DataDrivenQCD", "shape", ch.SystMap()(1.00))
 
-  src.cp().process(['DataDriven-Multijet']).AddSyst(
+  src.cp().process(['DD-Multijet']).AddSyst(
       cb, "DataDrivenHiggs", "shape", ch.SystMap()(1.00))
 
-  src.cp().process(['DataDriven-Multijet']).AddSyst(
+  src.cp().process(['DD-Multijet']).AddSyst(
       cb, "DataDriventop", "shape", ch.SystMap()(1.00))
 
-  src.cp().process(['DataDriven-Multijet']).AddSyst(
+  src.cp().process(['DD-Multijet']).AddSyst(
       cb, "DataDrivenW", "shape", ch.SystMap()(1.00))
 
-  src.cp().process(['DataDriven-Multijet']).AddSyst(
+  src.cp().process(['DD-Multijet']).AddSyst(
       cb, "DataDrivenZ", "shape", ch.SystMap()(1.00))
 
-  src.cp().process(['DataDriven-Multijet']).AddSyst(
+  src.cp().process(['DD-Multijet']).AddSyst(
       cb, "DataDrivenB", "shape", ch.SystMap()(1.00))
 
 
