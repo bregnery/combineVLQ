@@ -26,22 +26,22 @@ git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
 scram b
 ```
 
-The CombineHarvester needs to be altered slightly in order to work with the systematic names used in our analysis.
-This is done by altering the file `/CombineHarvester/CombineTools/src/CombineHarvester.cc` at lines 541 and 542. 
-These lines look like this:
+## Instructions
+
+First, we need to reorganize the output histograms containing the systematic uncertainties from the VLQ Analyzer. 
+This is done with `reorganize_vlq_analysis_output.py`. The `dirPath` argument gives the path to the old files, 
+`newDirPath` gives the path to the output file location, and `newFileName` gives the output file name.
 
 ```
-boost::replace_all(p_s_hi, "$SYSTEMATIC", entry->name() + "Up");  
-boost::replace_all(p_s_lo, "$SYSTEMATIC", entry->name() + "Down"); 
+python reorganize_vlq_analysis_output.py
 ```
 
-and need to be altered to include an underscore:
+The next step is to make the data cards for combine. At the moment, only TPrimeTPrime with branching ration 1:1:1 has 
+been implemented. The documentation will change as more options are added.
 
 ```
-boost::replace_all(p_s_hi, "$SYSTEMATIC", entry->name() + "_Up");  
-boost::replace_all(p_s_lo, "$SYSTEMATIC", entry->name() + "_Down"); 
+python make_VLQ_combine_cards.py
 ```
-
 
 
 
