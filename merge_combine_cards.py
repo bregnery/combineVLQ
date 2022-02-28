@@ -39,3 +39,8 @@ for year in years :
 
             print("Merging data cards for " + mass)
             os.system(mergeCardsStr)
+
+            # Make a corresponding RooWorkspace
+            workspaceStr = "text2workspace.py " + dirPath + "/" + mergedCardName + " -m " + mass + " -o " + dirPath + "/workspace_Merged_MR_" + signal + ".root"
+            print("Making the corresponding RooWorkspace")
+            os.system(workspaceStr)
