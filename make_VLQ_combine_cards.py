@@ -50,9 +50,9 @@ print '>> Creating processes and observations...'
 
 for chn in chns:
     # Analysis and Era strings are left blank to save space in the cards
-    cb.AddObservations(  ['*'],  [''], [''], [chn],                 cats ) #cats[chn+"_8TeV"]      )
-    cb.AddProcesses(     ['*'],  [''], [''], [chn], bkg_procs,      cats, False ) #cats[chn+"_8TeV"], False  )
-    cb.AddProcesses(     masses, [''], [''], [chn], sig_procs,      cats, True ) #cats[chn+"_8TeV"], True   )
+    cb.AddObservations(  ['*'],  ['vlq'], [''], [chn],                 cats ) #cats[chn+"_8TeV"]      )
+    cb.AddProcesses(     ['*'],  ['vlq'], [''], [chn], bkg_procs,      cats, False ) #cats[chn+"_8TeV"], False  )
+    cb.AddProcesses(     masses, ['vlq'], [''], [chn], sig_procs,      cats, True ) #cats[chn+"_8TeV"], True   )
 
 print '>> Adding systematic uncertainties...'
 vlqSysts.AddSystematics_vlq_had(cb)
@@ -78,14 +78,11 @@ cb_tt = cb.cp().channel(['tt'])
 bbb.MergeAndAdd(cb_tt.cp().era(['8TeV']).bin_id([0, 1, 2]).process(['QCD','W','ZLL','VV','ZTT','TT']), cb)
 '''
 
-#print '>> Setting standardised bin names...'
-#ch.SetStandardBinNames(cb)
-
 writer = ch.CardWriter('LIMITS/$TAG/$MASS/$BIN.txt',
                        'LIMITS/$TAG/common/$CHANNEL.input.root')
-#writer = ch.CardWriter('LIMITS/$TAG/$MASS/$CHANNEL_$BINID.txt',
-#                       'LIMITS/$TAG/common/$CHANNEL.input.root')
-#writer.SetVerbosity(1)
+print '>> Setting standardised bin names...'
+ch.SetStandardBinNames(cb, "VLQ_$BIN")
+writer.SetVerbosity(1)
 writer.WriteCards('cmb', cb)
 for chn in chns: writer.WriteCards(chn,cb.cp().channel([chn]))
 
