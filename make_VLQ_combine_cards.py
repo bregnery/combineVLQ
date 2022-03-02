@@ -68,6 +68,9 @@ for chn in chns:
 print '>> Merging bin errors and generating bbb uncertainties...'
 bbb = ch.BinByBinFactory()
 bbb.SetAddThreshold(0.1).SetMergeThreshold(0.5).SetFixNorm(True)
+for chn in chns:
+    bbb.AddBinByBin(cb.cp().channel([chn]).era(['']).backgrounds(), cb)
+    #bbb.AddBinByBin(cb.cp().channel([chn]).era(['']).process(['WJets', 'ZJets', 'ttWJets', 'ttWW', 'ttWZ', 'ttZJets', 'ttZZ', 'ttbar']), cb)
 
 '''
 cb_et = cb.cp().channel(['et'])
