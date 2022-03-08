@@ -57,6 +57,9 @@ for chn in chns:
 print '>> Adding systematic uncertainties...'
 vlqSysts.AddSystematics_vlq_had(cb)
 
+#cb.SetAutoMCStats(cb, 10, True, 1)
+#print ("The AutoMCStatsBins ", cb.GetAutoMCStatsBins() )
+
 print '>> Extracting histograms from input root files...'
 for chn in chns:
     file = aux_shapes + chn + "/2017_proc_obs_systematics.root" 
@@ -65,13 +68,15 @@ for chn in chns:
     cb.cp().channel([chn]).era(['']).signals().ExtractShapes(
         file, '$BIN/$PROCESS$MASS', '$BIN/$PROCESS$MASS_$SYSTEMATIC')
 
-print '>> Merging bin errors and generating bbb uncertainties...'
+
+'''
+print '>> Generating bbb uncertainties...'
 bbb = ch.BinByBinFactory()
 bbb.SetAddThreshold(0.1).SetMergeThreshold(0.5).SetFixNorm(True)
 for chn in chns:
     bbb.AddBinByBin(cb.cp().channel([chn]).era(['']).backgrounds(), cb)
     #bbb.AddBinByBin(cb.cp().channel([chn]).era(['']).process(['WJets', 'ZJets', 'ttWJets', 'ttWW', 'ttWZ', 'ttZJets', 'ttZZ', 'ttbar']), cb)
-
+'''
 '''
 cb_et = cb.cp().channel(['et'])
 bbb.MergeAndAdd(cb_et.cp().era(['8TeV']).bin_id([0, 1, 2]).process(['QCD','W','ZL','ZJ','VV','ZTT','TT']), cb)
@@ -83,8 +88,12 @@ bbb.MergeAndAdd(cb_tt.cp().era(['8TeV']).bin_id([0, 1, 2]).process(['QCD','W','Z
 
 writer = ch.CardWriter('LIMITS/$TAG/$MASS/$BIN.txt',
                        'LIMITS/$TAG/common/$CHANNEL.input.root')
+
 print '>> Setting standardised bin names...'
 ch.SetStandardBinNames(cb, "VLQ_$BIN")
+print '>> Generating bbb uncertainties...'
+cb.SetAutoMCStats(cb, 10, True, 1)
+
 writer.SetVerbosity(1)
 writer.WriteCards('cmb', cb)
 for chn in chns: writer.WriteCards(chn,cb.cp().channel([chn]))
