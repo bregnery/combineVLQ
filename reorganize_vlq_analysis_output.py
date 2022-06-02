@@ -55,6 +55,9 @@ for process, tfileName in fileDict.items():
             # histogram has bin name and then HT or systematic
             hist = tfile.Get(ikey.GetName())
 
+            # Make sure that the weights are properly added so binbybin stats can be used with the harvester
+            #hist.GetSumw2N()
+
             # Get the observed in HT in each signal region
             if len(ikey.GetName()) == 13:
                 hist.SetName(process )

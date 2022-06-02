@@ -43,5 +43,26 @@ been implemented. The documentation will change as more options are added.
 python make_VLQ_combine_cards.py
 ```
 
+Then, the data cards can be merged and made into RooWorkSpaces.
+
+```
+python merge_combine_cards.py
+```
+
+The merged cards can then be used for a number of studies:
+
+### Asymptotic limits
+
+To run asymptotic limits on the merged cards
+
+```
+python run_asymptotic_limits.py
+```
+
+And then make the Brazil plot
+
+```
+simple_Brasil_script.py
+```
 
 
